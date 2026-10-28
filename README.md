@@ -113,4 +113,4 @@ python src/generate_data.py   # regenerates the data
 
 ## 9. About
 
-Built by **[Nuelwumi2024](https://github.com/Nuelwumi2024)**. See my other analytics projects on GitHub, including a companion [Excel sales dashboard](https://github.com/Nuelwumi2024/excel-retail-sales-dashboard).
+Built by **[Nuelwumi2024](https://github.com/Nuelwumi2024)**. See my other analytics projects on GitHub.
