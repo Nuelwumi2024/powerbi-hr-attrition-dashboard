@@ -12,6 +12,18 @@ People analytics is one of the most in-demand BI use cases: every company wants 
 
 KPI cards (active headcount, leavers, attrition rate, estimated replacement cost), a leavers-versus-new-hires trend, and attrition by department, with Year, Department and Job Level slicers.
 
+### Why People Leave
+
+![Why People Leave](images/page2-why-people-leave.png)
+
+Attrition by department and job level (treemap), by tenure and age band, a decomposition tree from department to job level to work mode, and leavers by exit reason (compensation and career growth account for over half of exits).
+
+### Drivers & Engagement
+
+![Drivers & Engagement](images/page3-drivers-engagement.png)
+
+Attrition by overtime, by satisfaction score, and average monthly salary against attrition rate by department. Overtime staff and low satisfaction scores (1-2) leave at clearly higher rates, and the lowest-paid department (Customer Support) has the highest attrition.
+
 ## Business questions answered
 
 1. What is our attrition rate, and how does it trend over time?
