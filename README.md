@@ -4,6 +4,16 @@ People analytics is one of the most in-demand BI use cases: every company wants 
 
 > **Status:** data, DAX, theme and design spec are included. The `.pbix` itself must be assembled in Power BI Desktop (about 20 minutes with the guide below) because Power BI files can't be generated outside Desktop. Once built, save it to `report/` and add screenshots to `images/`.
 
+## Dashboard preview
+
+_Screenshots will be added here once the report is built._
+
+<!-- After saving PNGs to images/, replace the line above with:
+![Executive Overview](images/page1-executive-overview.png)
+![Why People Leave](images/page2-why-people-leave.png)
+![Drivers & Engagement](images/page3-drivers-engagement.png)
+-->
+
 ## Business questions answered
 
 1. What is our attrition rate, and how does it trend over time?
