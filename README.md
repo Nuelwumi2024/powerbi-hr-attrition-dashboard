@@ -6,13 +6,11 @@ People analytics is one of the most in-demand BI use cases: every company wants 
 
 ## Dashboard preview
 
-_Screenshots will be added here once the report is built._
+### Executive Overview
 
-<!-- After saving PNGs to images/, replace the line above with:
 ![Executive Overview](images/page1-executive-overview.png)
-![Why People Leave](images/page2-why-people-leave.png)
-![Drivers & Engagement](images/page3-drivers-engagement.png)
--->
+
+KPI cards (active headcount, leavers, attrition rate, estimated replacement cost), a leavers-versus-new-hires trend, and attrition by department, with Year, Department and Job Level slicers.
 
 ## Business questions answered
 
