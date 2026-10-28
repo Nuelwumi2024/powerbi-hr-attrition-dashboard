@@ -1,0 +1,115 @@
+// ============================================================
+// HR Attrition & Workforce Analytics - DAX
+// Tables: employees (fact), departments (dim), DateTable (dim)
+// Relationships: employees[DepartmentID] -> departments[DepartmentID] (many-to-one)
+//                employees[HireDate]     -> DateTable[Date]           (active)
+//                employees[TerminationDate] -> DateTable[Date]        (inactive, used via USERELATIONSHIP)
+// ============================================================
+
+// ---------- Date table (New table) ----------
+DateTable =
+ADDCOLUMNS (
+    CALENDAR ( DATE ( 2016, 1, 1 ), DATE ( 2025, 12, 31 ) ),
+    "Year", YEAR ( [Date] ),
+    "Month No", MONTH ( [Date] ),
+    "Month", FORMAT ( [Date], "MMM" ),
+    "Year-Month", FORMAT ( [Date], "yyyy-MM" )
+)
+
+// ---------- Calculated columns on employees ----------
+Tenure Years =
+DATEDIFF ( employees[HireDate], COALESCE ( employees[TerminationDate], DATE ( 2025, 12, 31 ) ), DAY ) / 365.25
+
+Tenure Band =
+SWITCH (
+    TRUE (),
+    employees[Tenure Years] < 1, "0-1 yr",
+    employees[Tenure Years] < 3, "1-3 yrs",
+    employees[Tenure Years] < 5, "3-5 yrs",
+    "5+ yrs"
+)
+
+Age Band =
+SWITCH (
+    TRUE (),
+    employees[Age] < 25, "<25",
+    employees[Age] < 35, "25-34",
+    employees[Age] < 45, "35-44",
+    "45+"
+)
+
+// ---------- Headcount ----------
+Total Employees Ever = COUNTROWS ( employees )
+
+Active Headcount =
+CALCULATE ( COUNTROWS ( employees ), ISBLANK ( employees[TerminationDate] ) )
+
+Leavers =
+CALCULATE (
+    COUNTROWS ( employees ),
+    NOT ( ISBLANK ( employees[TerminationDate] ) ),
+    USERELATIONSHIP ( employees[TerminationDate], DateTable[Date] )
+)
+
+New Hires = COUNTROWS ( employees )   // uses the active HireDate relationship
+
+// ---------- Attrition ----------
+Attrition Rate =
+DIVIDE (
+    CALCULATE ( COUNTROWS ( employees ), NOT ( ISBLANK ( employees[TerminationDate] ) ) ),
+    COUNTROWS ( employees )
+)
+
+// Headcount on the last day of the selected period
+Headcount EoP =
+VAR EndDate = MAX ( DateTable[Date] )
+RETURN
+    CALCULATE (
+        COUNTROWS ( employees ),
+        FILTER (
+            employees,
+            employees[HireDate] <= EndDate
+                && ( ISBLANK ( employees[TerminationDate] ) || employees[TerminationDate] > EndDate )
+        ),
+        REMOVEFILTERS ( DateTable )
+    )
+
+Avg Headcount =
+AVERAGEX ( VALUES ( DateTable[Year-Month] ), [Headcount EoP] )
+
+// Annualised turnover for the selected period
+Turnover Rate = DIVIDE ( [Leavers], [Avg Headcount] )
+
+Leavers PY =
+CALCULATE ( [Leavers], SAMEPERIODLASTYEAR ( DateTable[Date] ) )
+
+Leavers YoY % = DIVIDE ( [Leavers] - [Leavers PY], [Leavers PY] )
+
+// ---------- Early attrition & cost ----------
+First Year Leavers =
+CALCULATE (
+    COUNTROWS ( employees ),
+    NOT ( ISBLANK ( employees[TerminationDate] ) ),
+    employees[Tenure Years] < 1
+)
+
+Early Attrition % = DIVIDE ( [First Year Leavers], CALCULATE ( COUNTROWS ( employees ), NOT ( ISBLANK ( employees[TerminationDate] ) ) ) )
+
+// Rule of thumb: replacing an employee costs ~50% of annual salary
+Est. Replacement Cost =
+SUMX (
+    FILTER ( employees, NOT ( ISBLANK ( employees[TerminationDate] ) ) ),
+    employees[MonthlySalary] * 12 * 0.5
+)
+
+// ---------- Pay & engagement ----------
+Avg Monthly Salary = AVERAGE ( employees[MonthlySalary] )
+Avg Satisfaction = AVERAGE ( employees[SatisfactionScore] )
+Avg Tenure (Yrs) = AVERAGE ( employees[Tenure Years] )
+
+Overtime Attrition Rate =
+CALCULATE ( [Attrition Rate], employees[Overtime] = "Yes" )
+
+// ---------- Title / formatting helpers ----------
+Attrition KPI Colour =
+IF ( [Attrition Rate] > 0.25, "#C0392B", IF ( [Attrition Rate] > 0.18, "#E67E22", "#2A9D8F" ) )
