@@ -2,7 +2,7 @@
 
 People analytics is one of the most in-demand BI use cases: every company wants to know **who is leaving, why, and what it costs**. This project is a complete Power BI build kit: a star-schema dataset, a tested set of DAX measures, a custom theme and a page-by-page report spec.
 
-> **Status:** data, DAX, theme and design spec are included. The `.pbix` itself must be assembled in Power BI Desktop (about 20 minutes with the guide below) because Power BI files can't be generated outside Desktop. Once built, save it to `report/` and add screenshots to `images/`.
+> **Status:** complete. The finished report is in [`report/HR_Attrition_Dashboard.pbix`](report/HR_Attrition_Dashboard.pbix) (open it in Power BI Desktop). Data, DAX measures, theme and the build guide are included so you can rebuild it from scratch.
 
 ## Dashboard preview
 
